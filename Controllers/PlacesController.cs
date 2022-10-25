@@ -45,19 +45,34 @@ namespace Travel.Controllers
 
       return await query.ToListAsync();
     }
+
+    [HttpGet("random")]
+    public async Task<IEnumerable<Place>> GetRandom()
+    {
+      int lower = 1;
+      int upper = _db.Places.Count() + 1;
+      Random rnd = new Random();
+      int id = rnd.Next(lower, upper);
+      IQueryable<Place> quer = _db.Places.Include(entry => entry.Reviews).AsQueryable();
+      quer = quer.Where(entry => entry.PlaceId == id).Include(entry => entry.Reviews);
+      // if (id == null)
+      // {
+      //   return NotFound();
+      // }
+      return await quer.ToListAsync();
+    }
   
     // GET api/places/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Place>> GetPlace(int id)
+    public async Task<IEnumerable<Place>> GetPlace(int id)
     {
-        var place = await _db.Places.FindAsync(id);
-
-        if (place == null)
-        {
-            return NotFound();
-        }
-
-        return place;
+      IQueryable<Place> place = _db.Places.Include(entry => entry.Reviews).AsQueryable();
+      place = place.Where(entry => entry.PlaceId == id).Include(entry => entry.Reviews);
+      // if (id > _db.Places.Count())
+      // {
+      //   return NotFound();
+      // }
+      return await place.ToListAsync();
     }
 
     // POST api/places
