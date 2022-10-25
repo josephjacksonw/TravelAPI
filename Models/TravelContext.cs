@@ -18,7 +18,12 @@ namespace Travel.Models
                   new Place { PlaceId = 4, Name = "Toledo", Country = "United States", Rating = 4 },
                   new Place { PlaceId = 5, Name = "Buffalo", Country = "United States", Rating = 2 }
               );
+          builder.Entity<Review>()
+              .HasData(
+                  new Review { ReviewId = 1, UserName = "Josh", PlaceId = 1}
+              );
         }
         public DbSet<Place> Places { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }

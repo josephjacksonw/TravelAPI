@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq; 
+// using System.Data.Entity;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -24,25 +26,26 @@ namespace Travel.Controllers
     [HttpGet]
     public async Task<List<Place>> Get(string country, string name, int rating)
     {
-      IQueryable<Place> query = _db.Places.AsQueryable();
-
-      if (country != null)
-      {
-        query = query.Where(entry => entry.Country == country);
-      }
+      IQueryable<Place> query = _db.Places.Include(entry => entry.Reviews).AsQueryable();
 
       if (name != null)
       {
-        query = query.Where(entry => entry.Name == name);
+        query = query.Where(entry => entry.Name == name).Include(entry => entry.Reviews);
+      }
+
+      if (country != null)
+      {
+        query = query.Where(entry => entry.Country == country).Include(entry => entry.Reviews);
       }
 
       if (rating > 0)
       {
-        query = query.Where(entry => entry.Rating == rating);
+        query = query.Where(entry => entry.Rating == rating).Include(entry => entry.Reviews);
       }
 
       return await query.ToListAsync();
     }
+
     // GET api/places/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Place>> GetPlace(int id)
