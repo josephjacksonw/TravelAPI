@@ -45,7 +45,7 @@ namespace Travel.Controllers
 
       return await query.ToListAsync();
     }
-
+  
     // GET api/places/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Place>> GetPlace(int id)
