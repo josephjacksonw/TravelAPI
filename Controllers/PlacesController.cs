@@ -120,5 +120,7 @@ namespace Travel.Controllers
     {
       return _db.Places.Any(e => e.PlaceId == id);
     }
+
+    
   }
 }
